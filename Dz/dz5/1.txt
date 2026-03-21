@@ -1,0 +1,7 @@
+На мою думку в colorama найважливіші команди це
+colorama.init() - бо без нього в терміналі віндовс не буде нічого нового
+print(colorama.Fore.RED + "Test") - це колір тексту для якого в більшості і використовують colorama 
+print(colorama.Back.WHITE + "Test") - це колір заднього фону 
+print(colorama.Style.BRIGHT + "Test") - це стилі
+print("5букв" +  colorama.Cursor.BACK(5) + "Test") - це рух курсора
+Але в colorama є ще куча всього але поки я в ньому розберуся 
