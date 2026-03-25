@@ -1,4 +1,4 @@
-import colorama , datetime
+import colorama , datetime , re
 
 class Task:
     def __init__(self,name,dedline,deskr):
@@ -37,32 +37,42 @@ class TaskMGR:
         for index , i in enumerate(self.tasks):  
             print(f"{index}: {i.name} | {i.dedline} | {i.deskr}")
 
-MBR = TaskMGR()
+def save_prin():
+    MGR.save_file()
+    MGR.print_task()
+    input()
 
-MBR.print_task()
+MGR = TaskMGR()
 
-try:
-    a = int(input('Введи дію 1-додати 2-прибрать '))
-except ValueError:
-    print("Пока")
+MGR.print_task()
 
+a = input('1-додати 2-прибрать ')
 
-if a == 1:
+if a == "1":
     b = input("Введи назву ")
     c = input("Введи дедлайн ")
     d = input("Введи опис ")
     e = Task(b,c,d)
-    MBR.add(e)
-    print("Ось список")
-    MBR.print_task()
-    MBR.save_file()
-    input()
+    MGR.add(e)
+    save_prin()
     
-elif a == 2:
+elif a == "2":
     f = int(input("Введи id "))
-    MBR.remov(f)
-    MBR.save_file()
-    MBR.print_task()
+    MGR.remov(f)
+    save_prin
 
-elif a!= int:
+elif a != "1" and "2":
+    mat = re.match(r"([^\+\d]+)\+(\d+)(.*)", a)
+    b = mat.group(1).strip()
+    try:
+        h = int(mat.group(2))
+    except:
+        print('Шось не так')
+    d = mat.group(3)
+    c = datetime.date.today() + datetime.timedelta(days=h)
+    c = c.strftime("%d.%m")
+    e = Task(b,c,d)
+    MGR.add(e)
+    save_prin()
+    
     
