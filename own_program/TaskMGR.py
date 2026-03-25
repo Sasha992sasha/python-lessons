@@ -10,17 +10,17 @@ class TaskMGR:
     def __init__(self):
         self.tasks = []
         try:
-            with open("task.txt" , "r")as f:
+            with open("task.txt", "r", encoding="utf-8") as f:
                 for i in f:
                     i = i.strip()
                     name,dedline,deskr = i.strip().split(' | ')
                     self.tasks.append(Task(name,dedline,deskr))
-        except FileNotFoundError :
+        except :
             print("Шось не те з файлом")
-            a = open("task.txt" , "w")
+            a = open("task.txt" , "w" , encoding="utf-8")
     
     def save_file(self):
-        with open ("task.txt" , 'w') as f:
+        with open("task.txt", "w", encoding="utf-8") as f:
             for i in self.tasks:
                 f.write(f"{i.name} | {i.dedline} | {i.deskr} \n")
     
@@ -34,9 +34,21 @@ class TaskMGR:
             input('Не той індекс')
 
     def print_task(self):
+        today = datetime.date.today()
         for index , i in enumerate(self.tasks):  
-            print(f"{index}: {i.name} | {i.dedline} | {i.deskr}")
-
+            try:
+                normalDedline = datetime.datetime.strptime(f"{i.dedline}.{today.year}", "%d.%m.%Y").date()
+                t = (normalDedline - today).days
+                if t <= 0:
+                    color = colorama.Fore.RED
+                elif t <= 3:
+                    color = colorama.Fore.YELLOW
+                else:
+                    color = colorama.Fore.GREEN
+            except:
+                color = ""
+            print(f"{color}{index}: {i.name} | {i.dedline} | {i.deskr}{colorama.Style.RESET_ALL}")
+            
 def save_prin():
     MGR.save_file()
     MGR.print_task()
@@ -49,8 +61,8 @@ MGR.print_task()
 a = input('1-додати 2-прибрать ')
 
 if a == "1":
-    b = input("Введи назву ")
-    c = input("Введи дедлайн ")
+    b = input("Введи назву ") 
+    c = input("Введи дедлайн ") 
     d = input("Введи опис ")
     e = Task(b,c,d)
     MGR.add(e)
@@ -59,20 +71,19 @@ if a == "1":
 elif a == "2":
     f = int(input("Введи id "))
     MGR.remov(f)
-    save_prin
+    save_prin()
 
-elif a != "1" and "2":
+elif a not in ("1", "2"):
     mat = re.match(r"([^\+\d]+)\+(\d+)(.*)", a)
     b = mat.group(1).strip()
     try:
         h = int(mat.group(2))
     except:
         print('Шось не так')
-    d = mat.group(3)
+    d = mat.group(3) if mat.group(3) else "-"
     c = datetime.date.today() + datetime.timedelta(days=h)
     c = c.strftime("%d.%m")
     e = Task(b,c,d)
     MGR.add(e)
     save_prin()
-    
     
