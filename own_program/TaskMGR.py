@@ -1,10 +1,12 @@
+import colorama , datetime
+
 class Task:
     def __init__(self,name,dedline,deskr):
         self.name = name
         self.dedline = dedline
         self.deskr = deskr
 
-class TaskMBR:
+class TaskMGR:
     def __init__(self):
         self.tasks = []
         try:
@@ -14,7 +16,7 @@ class TaskMBR:
                     name,dedline,deskr = i.strip().split(' | ')
                     self.tasks.append(Task(name,dedline,deskr))
         except FileNotFoundError :
-            print("Нема твоїх завдань(")
+            print("Шось не те з файлом")
             a = open("task.txt" , "w")
     
     def save_file(self):
@@ -29,13 +31,13 @@ class TaskMBR:
         try:
             self.tasks.pop(index)
         except IndexError:
-            input('В тебе пусто ')
+            input('Не той індекс')
 
     def print_task(self):
         for index , i in enumerate(self.tasks):  
             print(f"{index}: {i.name} | {i.dedline} | {i.deskr}")
 
-MBR = TaskMBR()
+MBR = TaskMGR()
 
 MBR.print_task()
 
@@ -61,3 +63,6 @@ elif a == 2:
     MBR.remov(f)
     MBR.save_file()
     MBR.print_task()
+
+elif a!= int:
+    
