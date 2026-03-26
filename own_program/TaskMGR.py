@@ -55,51 +55,54 @@ class TaskMGR: #це основа робота планувальника
 def save_prin(): #це вдобна команда щоби не повторюватись по 100 раз
     MGR.save_file()
     MGR.print_task()
-    input()
+    if input() == "r".strip(): #Це повторення 
+        work()
 
+def work():
+    a = input('1-додати 2-прибрать ')
+
+    if a == "1":
+        b = input("Введи назву ") 
+        c = input("Введи дедлайн ")
+        d = input("Введи опис ")
+        
+        if c.startswith('+'):#швидка дата просто +1 замість 23.03
+            try:
+                days = int(c.removeprefix('+'))
+                c = datetime.date.today() + datetime.timedelta(days=days)    
+                c = c.strftime("%d.%m")
+            except:
+                input("Щось не так з +датою ")
+                
+        e = Task(b,c,d)
+        MGR.add(e)
+        save_prin()
+        
+    elif a == "2":
+        f = int(input("Введи id "))
+        MGR.remov(f)
+        save_prin()
+
+    elif not a.isdigit(): #це швидкий набір по типу Name+1description
+        mat = re.match(r"([^\+\d]+)\+(\d+)(.*)", a)
+        if not mat:
+            print("Шось не то")
+            input()
+        else:
+            b = mat.group(1).strip()
+        try:
+            h = int(mat.group(2)) #дедлайн
+        except:
+            print('Шось не так')# зроблено погано але ним ніхто не користується тому всеодно
+        d = mat.group(3) if mat.group(3) else "-"
+        c = datetime.date.today() + datetime.timedelta(days=h) 
+        c = c.strftime("%d.%m") # це форматування
+        e = Task(b,c,d)
+        MGR.add(e)
+        save_prin()
+        
 MGR = TaskMGR()
 
 MGR.print_task() #це вивід
 
-a = input('1-додати 2-прибрать ')
-
-if a == "1":
-    b = input("Введи назву ") 
-    c = input("Введи дедлайн ")
-    d = input("Введи опис ")
-    
-    if c.startswith('+'):#швидка дата просто +1 замість 23.03
-        try:
-            days = int(c.removeprefix('+'))
-            c = datetime.date.today() + datetime.timedelta(days=days)    
-            c = c.strftime("%d.%m")
-        except:
-            input("Щось не так з +датою ")
-            
-    e = Task(b,c,d)
-    MGR.add(e)
-    save_prin()
-    
-elif a == "2":
-    f = int(input("Введи id "))
-    MGR.remov(f)
-    save_prin()
-
-elif not a.isdigit(): #це швидкий набір по типу Name+1description
-    mat = re.match(r"([^\+\d]+)\+(\d+)(.*)", a)
-    if not mat:
-        print("Шось не то")
-        input()
-    else:
-        b = mat.group(1).strip()
-    try:
-        h = int(mat.group(2)) #дедлайн
-    except:
-        print('Шось не так')# зроблено погано але ним ніхто не користується тому всеодно
-    d = mat.group(3) if mat.group(3) else "-"
-    c = datetime.date.today() + datetime.timedelta(days=h) 
-    c = c.strftime("%d.%m") # це форматування
-    e = Task(b,c,d)
-    MGR.add(e)
-    save_prin()
-    
+work()
